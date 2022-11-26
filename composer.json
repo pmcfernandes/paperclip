@@ -1,0 +1,7 @@
+{
+    "require": {
+        "illuminate/database": "^7.30",
+        "phpmailer/phpmailer": "^6.5",
+        "rmccue/requests": "^1.8"
+    }
+}

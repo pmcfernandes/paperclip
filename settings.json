@@ -1,0 +1,15 @@
+{
+    "connection": {
+        "host": "localhost",
+        "username": "root",
+        "password": "unknown",
+        "database": "paperclip",
+        "type": "mysql"
+    },
+    "mail": {
+        "email": "email@domain.com",
+        "mailserver": "smtp.domain.com",
+        "username": "email@domain.com",
+        "password": "xptoxptoxpto"
+    }
+}

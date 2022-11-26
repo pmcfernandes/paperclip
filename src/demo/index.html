@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://s.pageclip.co/v1/pageclip.css" rel="stylesheet">
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <form action="../pageclip.php?key=aaa&form=bbb" className="pageclip-form" method="POST">
+        <!-- text field -->
+        <input type="email" name="email" value="bob@omg.com"/>
+
+
+         <!-- This will be used in the email's subject. Must have name="subject" -->
+        <input type="text" name="subject" value="Email subject"/>
+      
+        <select name="heardFrom">
+          <option value="ph" selected>Product Hunt</option>
+          <option value="hn">Hacker News</option>
+        </select>
+      
+        <!-- radio buttons -->
+        <input type="radio" name="animal" value="tarantula" id="tarantula" checked />
+        <label htmlFor="tarantula">Tarantula</label>
+      
+        <input type="radio" name="animal" value="turtle" id="turtle" />
+        <label htmlFor="turtle">Turtle</label>
+      
+        <!-- checkboxes -->
+        <input type="checkbox" name="likes[pizza]" id="pizza" checked />
+        <label htmlFor="pizza">Pizza 🍕</label>
+      
+        <input type="checkbox" name="likes[yams]" id="yams"/>
+        <label htmlFor="yams">Sweet Potatos 🍠</label>
+      
+        <!-- hidden inputs -->
+        <input type="hidden" name="version" value="v1" />
+        <button class="pageclip-form__submit" type="submit">
+          <span>Submit</span>
+        </button>
+
+        <script type="text/javascript" src="../js/pageclip.js"></script>
+        
+        <script type="text/javascript">
+          document.querySelector('.pageclip-form__submit').addEventListener('click', function(e) {
+              Pageclip.form(document.querySelector('form'), {
+                  onSubmit: function(e) {
+                      alert('x');
+                  },
+                  onResponse: function(err, data) {
+                      if (err) {
+                          alert(err.message);
+                      } else {
+
+                      }
+                  }
+              }).send('aaa', 'bbb');
+          });
+        </script>
+      </form>
+  </body>
+</html>
