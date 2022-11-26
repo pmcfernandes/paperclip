@@ -1,0 +1,8 @@
+.vs/
+.vscode/
+.idea/
+
+node_modules/
+vendor/
+
+*.lock
