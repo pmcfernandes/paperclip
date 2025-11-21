@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sites Admin{% endblock %}
+
+{% block body %}
+<div class="container py-4" x-data="sitesAdmin()" x-init="init()">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3">Sites</h1>
+    <div>
+        <button @click="openModal(null)" class="btn btn-primary">New Site</button>
+        <button class="btn btn-outline-danger me-2" onclick="localStorage.removeItem('api_token'); window.location.href='/admin';">Logout</button>
+    </div>
+  </div>
+
+  <div id="alertPlaceholder"></div>
+
+  <table class="table table-striped" id="sitesTable">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Name</th>
+        <th style="width:220px">Domain</th>
+        <th style="width:120px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="s in sites" :key="s.id">
+        <tr>
+          <td x-text="s.id"></td>
+          <td><a :href="`/admin/forms?site_id=${encodeURIComponent(s.id)}`" x-text="s.name || ''"></a></td>
+          <td x-text="s.domain || ''"></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" @click="openModal(s)">Edit</button>
+            <button class="btn btn-sm btn-outline-danger" @click="removeSite(s.id)">Delete</button>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="siteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="siteModalTitle">New Site</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="siteForm" @submit.prevent>
+            <input type="hidden" id="siteId" x-model="form.id">
+            <div class="mb-3">
+              <label class="form-label">Name</label>
+              <input id="name" class="form-control" x-model="form.name" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Domain</label>
+              <input id="domain" class="form-control" x-model="form.domain" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Webhook URL</label>
+              <input id="webhook_url" class="form-control" x-model="form.webhook_url" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Webhook Token</label>
+              <input id="webhook_token" class="form-control" x-model="form.webhook_token" />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button @click="save()" type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/admin/sites.js"></script>
+{% endblock %}

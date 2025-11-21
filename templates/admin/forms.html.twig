@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Forms Admin{% endblock %}
+
+{% block body %}
+<div class="container py-4" x-data="formsAdmin()" x-init="init()">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3">Forms</h1>
+    <div>
+      <a href="/admin/sites" class="btn btn-outline-secondary me-2">Back to Sites</a>
+      <button class="btn btn-primary" @click="openFormModal(null)">New Form</button>
+      <button class="btn btn-outline-danger me-2" onclick="localStorage.removeItem('api_token'); window.location.href='/admin';">Logout</button>
+    </div>
+  </div>
+
+  <div id="alertPlaceholder"></div>
+
+  <table class="table table-striped" id="formsTable">
+    <thead>
+      <tr>
+        <th style="width:40px">#</th>
+        <th>Name</th>
+        <th style="width:120px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <template x-for="f in forms" :key="f.id">
+        <tr>
+          <td x-text="f.id"></td>
+          <td><a :href="`/admin/submissions?form_id=${encodeURIComponent(f.id)}`" x-text="f.name || ''"></a></td>
+          <td>
+            <button class="btn btn-sm btn-outline-primary" @click="editForm(f.id)">Edit</button>
+            <button class="btn btn-sm btn-outline-danger" @click="deleteForm(f.id)">Delete</button>
+          </td>
+        </tr>
+      </template>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="formModalTitle">New Form</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formForm" @submit.prevent>
+            <input type="hidden" id="formId" x-model="form.id">
+
+            <!-- Row: Name (full width) -->
+            <div class="row">
+              <div class="col-12 mb-3">
+                <label class="form-label">Name</label>
+                <input id="formName" class="form-control" x-model="form.name" />
+              </div>
+            </div>
+
+            <!-- Row: Site (4) + Send On Submit (8) -->
+            <div class="row">
+              <div class="col-md-12 mb-3 d-flex align-items-center">
+                <div class="form-check form-switch w-100">
+                  <input id="formEmailOnSubmit" type="checkbox" class="form-check-input" x-model="form.emailOnSubmit" />
+                  <label class="form-check-label ms-2" for="formEmailOnSubmit">Email On Submit</label>
+                </div>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label class="form-label">Send On Submit (comma separated emails)</label>
+                <input id="formSendOnSubmit" class="form-control" x-model="form.sendOnSubmit" />
+              </div>
+            </div>
+
+            <!-- Row: Email On Submit (2) + URL On Ok (5) + URL On Error (5) -->
+            <div class="row align-items-center">
+              <div class="col-md-12 mb-3">
+                <label class="form-label">URL On Ok</label>
+                <input id="formUrlOnOk" class="form-control" x-model="form.urlOnOk" />
+              </div>
+              <div class="col-md-12 mb-3">
+                <label class="form-label">URL On Error</label>
+                <input id="formUrlOnError" class="form-control" x-model="form.urlOnError" />
+              </div>
+            </div>
+
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button  @click="save()" type="button" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/admin/forms.js"></script>
+{% endblock %}

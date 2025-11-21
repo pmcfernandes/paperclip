@@ -1,0 +1,49 @@
+document.addEventListener('alpine:init', () => {
+  Alpine.data('registerForm', () => ({
+    username: '',
+    email: '',
+    password: '',
+    message: '',
+
+    async fetchJson(path, opts = {}) {
+      const headers = Object.assign({ Accept: 'application/json' }, opts.headers || {});
+      try {
+        const token = localStorage.getItem('api_token');
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+      } catch (e) {}
+
+      const method = opts.method || (opts.json ? 'POST' : 'GET');
+      const body = opts.json ? JSON.stringify(opts.json) : opts.body;
+      if (opts.json) headers['Content-Type'] = 'application/json';
+
+      const resp = await fetchWithAuth(path, Object.assign({}, opts, { method, headers, body }));
+      const txt = await resp.text();
+      let data = null;
+      try { data = txt ? JSON.parse(txt) : null; } catch (e) { data = txt; }
+      if (!resp.ok) throw { status: resp.status, data };
+      return data;
+    },
+
+    async submit() {
+      this.message = '';
+      const payload = {
+        username: this.username.trim(),
+        email: this.email.trim(),
+        password: this.password
+      };
+
+      try {
+        await this.fetchJson('/api/users/register', { method: 'POST', json: payload });
+        this.message = '<div class="alert alert-success">Registered — you can now <a href="/admin">login</a>.</div>';
+        this.username = '';
+        this.email = '';
+        this.password = '';
+      } catch (err) {
+        const text = err && err.data && (err.data.error || (Array.isArray(err.data.errors) ? err.data.errors.join(', ') : null))
+          ? (err.data.error || err.data.errors.join(', '))
+          : 'Registration failed';
+        this.message = `<div class="alert alert-danger">${text}</div>`;
+      }
+    }
+  }))
+})

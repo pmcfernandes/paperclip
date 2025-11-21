@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block body %}
+<div class="container py-4" x-data="submissionsAdmin()" x-init="init()">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h3">Submissions</h1>
+    <div>
+      <a href="/admin/forms" class="btn btn-outline-secondary me-2">Back to Forms</a>
+      <button @click="loadSubmissions()" class="btn btn-primary">Refresh</button>
+      <button class="btn btn-outline-danger me-2" onclick="localStorage.removeItem('api_token'); window.location.href='/admin';">Logout</button>
+    </div>
+  </div>
+
+  <div class="mb-3 row gx-2">
+    <div class="col-auto">
+      <input x-model="filterSubmitId" class="form-control" placeholder="find submit #" />
+    </div>
+    <div class="col-auto">
+      <button @click="loadSubmissions()" class="btn btn-outline-primary">Apply</button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-sm table-striped">
+      <thead>
+          <tr>
+          <th style="width:40px">#</th>
+          <th style="width:140px">Submitted At</th>
+          <template x-for="k in otherKeys" :key="k">
+            <th x-text="formatHeader(k)"></th>
+          </template>
+          <th style="width:60px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <template x-for="r in rows" :key="r.submit_id + '-' + (r.id || '')">
+          <tr>
+            <td x-text="r.submit_id"></td>
+            <td x-text="formatDateTime(r.submitted_at)"></td>
+            <template x-for="k in otherKeys" :key="k">
+              <td x-text="(r[k] !== undefined && r[k] !== null) ? r[k] : ''"></td>
+            </template>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary" @click="view(r)">View</button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal for details -->
+  <div class="modal fade" id="submissionModal" tabindex="-1" aria-hidden="true" x-ref="modal">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Submission Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div x-show="!selected">No data</div>
+          <div x-show="selected">
+            <table class="table table-sm">
+              <tbody>
+                <template x-for="(v,k) in selected" :key="k">
+                  <tr>
+                    <th x-text="formatHeader(k)"></th>
+                    <td>
+                      <pre x-text="formatValue(v)" style="margin:0;background:transparent;border:none;padding:0"></pre>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="/js/admin/submissions.js"></script>
+{% endblock %}

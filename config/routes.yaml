@@ -1,0 +1,10 @@
+# Import controller routes defined with PHP 8 attributes
+controllers:
+  resource: '../src/Controller/'
+  type: attribute
+
+index:
+  path: /
+  controller: App\Controller\DefaultController::index
+
+# Add static routes below if needed

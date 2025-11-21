@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ formEntity.name ?: 'Form' }}{% endblock %}
+{% block body %}
+  <div class="container mt-5">
+    <h3 class="mb-4 text-center">{{ formEntity.name ?: 'Form' }}</h3>
+
+    <form action="{{ action }}" method="{{ method|upper }}">
+      <input type="hidden" name="form_slug" value="{{ slug }}" />
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input id="name" name="name" type="text" class="form-control" required />
+            <label for="name">Name</label>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input id="email" name="email" type="email" class="form-control" required />
+            <label for="email">Email</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <input id="subject" name="subject" type="text" class="form-control" required />
+            <label for="subject">Subject</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="form-floating mb-3">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" class="form-control" placeholder="Leave a comment here" style="min-height:200px"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2 col mx-auto mb-3">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

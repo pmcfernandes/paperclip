@@ -1,8 +1,16 @@
-.vs/
-.vscode/
-.idea/
-
-node_modules/
-vendor/
+/vendor/
+/var/
+/.env.local
+/.phpunit.result.cache
+/node_modules/
+/.idea/
+/.vscode/
+/.DS_Store
+/public/bundles/
+/.env
+/.env.local.php
+/.env.*.local
+/phpstorm.meta.php
+/.symfony
 
 *.lock
